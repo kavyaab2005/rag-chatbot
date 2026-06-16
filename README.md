@@ -131,7 +131,7 @@ This app is deployed on **Streamlit Cloud** with automatic CI/CD:
 
 - Every `git push` to `main` triggers an automatic redeploy
 - API keys are stored securely as Streamlit Secrets
-- Live at: [rag-chatbot.streamlit.app](https://rag-chatbot.streamlit.app)
+- Live at: [rag-chatbot.streamlit.app](https://rag-chatbot-kkega75mx9sfmx8m3oq9xt.streamlit.app/)
 
 ---
 
@@ -156,8 +156,7 @@ Give me 5 important points from this document
 **Kavya B**
 7th Semester, CSE-AIML
 Vijaya Vittala Institute of Technology, Bengaluru
-ID: 1VJ23CI025
-
+VTU
 ---
 
 ## 📄 License
