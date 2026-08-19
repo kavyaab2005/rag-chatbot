@@ -1,0 +1,25 @@
+Artificial Intelligence and Machine Learning Notes
+
+What is Artificial Intelligence?
+Artificial Intelligence (AI) is the simulation of human intelligence in machines.
+AI systems can perform tasks like speech recognition, decision making, and language translation.
+
+What is Machine Learning?
+Machine Learning is a subset of AI that allows systems to learn from data.
+Instead of being programmed with rules, ML models learn patterns from examples.
+Common ML algorithms include linear regression, decision trees, and neural networks.
+
+What is Deep Learning?
+Deep Learning is a subset of Machine Learning using neural networks with many layers.
+It is used in image recognition, natural language processing, and speech recognition.
+Popular deep learning frameworks include TensorFlow, PyTorch, and Keras.
+
+What is LangChain?
+LangChain is a framework for building applications powered by large language models.
+It helps connect LLMs to external data sources and tools.
+LangChain supports retrieval augmented generation (RAG) pipelines.
+
+What is RAG?
+Retrieval Augmented Generation (RAG) combines search with text generation.
+It retrieves relevant documents and uses them as context for the LLM.
+RAG helps reduce hallucinations and gives accurate, grounded answers.
