@@ -3,9 +3,9 @@ from dotenv import load_dotenv
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_groq import ChatGroq
 from langchain_chroma import Chroma
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough, RunnableLambda
+from langchain_core.runnables import RunnableLambda
 
 load_dotenv()
 
@@ -47,26 +47,24 @@ def build_chain(persist_dir="./vectorstore"):
     # Retriever
     retriever = vectorstore.as_retriever(
         search_type="similarity",
-        search_kwargs={"k": 3}
+        search_kwargs={"k": 3},
     )
 
     # LLM
     llm = ChatGroq(
-    model="qwen/qwen3.6-27b",
-    temperature=0,
-
-
+        model="openai/gpt-oss-120b",
+        temperature=0,
     )
 
-    # Chain — passes question as string to retriever
+    # Chain: passes question as string to retriever
     chain = (
-    {
-        "context": RunnableLambda(lambda x: x["question"]) | retriever | format_docs,
-        "question": RunnableLambda(lambda x: x["question"]),
-    }
-    | PROMPT
-    | llm
-    | StrOutputParser()
-)
+        {
+            "context": RunnableLambda(lambda x: x["question"]) | retriever | format_docs,
+            "question": RunnableLambda(lambda x: x["question"]),
+        }
+        | PROMPT
+        | llm
+        | StrOutputParser()
+    )
 
     return chain, retriever
