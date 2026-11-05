@@ -1,4 +1,5 @@
 import os
+import time
 from dotenv import load_dotenv
 from langchain_community.document_loaders import DirectoryLoader, TextLoader, PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -48,18 +49,38 @@ def chunk_documents(documents):
 
 
 # ----------------------------
-# STEP 3: SAVE TO VECTOR STORE
+# STEP 3: SAVE TO VECTOR STORE (batched, rate-limit safe)
 # ----------------------------
-def build_vectorstore(chunks, persist_dir="./vectorstore"):
+def build_vectorstore(chunks, persist_dir="./vectorstore", batch_size=20, pause=4):
     print("Creating embeddings and saving to ChromaDB...")
 
     embeddings = GoogleGenerativeAIEmbeddings(model="gemini-embedding-001")
 
-    vectorstore = Chroma.from_documents(
-        documents=chunks,
-        embedding=embeddings,
+    vectorstore = Chroma(
         persist_directory=persist_dir,
+        embedding_function=embeddings,
     )
+
+    total = len(chunks)
+    for start in range(0, total, batch_size):
+        batch = chunks[start:start + batch_size]
+
+        for attempt in range(5):
+            try:
+                vectorstore.add_documents(batch)
+                break
+            except Exception as e:
+                wait = 15 * (attempt + 1)
+                print(f"Batch starting at {start} failed ({e}). Retrying in {wait}s...")
+                time.sleep(wait)
+        else:
+            raise RuntimeError(
+                f"Embedding failed after 5 retries at chunk {start}. "
+                "Check your Google API quota."
+            )
+
+        print(f"Embedded {min(start + batch_size, total)}/{total} chunks")
+        time.sleep(pause)
 
     print("Vector store saved successfully!")
     return vectorstore
